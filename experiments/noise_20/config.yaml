@@ -1,0 +1,2 @@
+experiment: noise_20
+model: logistic_regression_gd
