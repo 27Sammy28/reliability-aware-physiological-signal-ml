@@ -1,168 +1,247 @@
-# Reliability-Aware ECG and Health Signal Machine Learning
+# Reliability-Aware Physiological Signal Machine Learning
 
-Advanced GitHub research scaffold for reliability-aware machine learning on noisy health signals. The project starts with ECG classification using the Kaggle MIT-BIH dataset and is designed to extend toward voice, speech, and language biomarkers for health assessment.
+## Overview
 
-## Research Direction
+Physiological signal machine learning systems are increasingly deployed in healthcare, wearable sensing, and remote monitoring applications. However, model performance is often degraded by signal corruption, motion artifacts, missing measurements, dataset shift, and unreliable sensor acquisition conditions.
 
-This repository is aligned with health-signal research at the intersection of signal processing, speech science, and machine learning, including the broader direction associated with Visar Berisha at Arizona State University. In the proposed academic pathway, Berisha is framed as a prospective supervisor whose expertise could provide training for reliable inference from noisy health signals.
+This project introduces a reliability-aware machine learning framework for physiological signal analysis that explicitly incorporates signal quality assessment into the prediction pipeline. Rather than optimizing predictive accuracy alone, the framework investigates how reliability estimation can improve robustness, calibration, and generalization under realistic deployment conditions.
 
-The current ECG implementation is a first testbed for calibration, robustness, and reliability. The long-term direction extends toward voice, cough, respiratory audio, speech, and language signals for Africa-focused public-health surveillance, including future Africa CDC-style applications for tuberculosis, respiratory infections, and emerging outbreak detection.
+The repository provides a reproducible research pipeline for reliability-aware learning using physiological time-series data.
 
-## Long-Term Africa CDC Pathway
+---
 
-The guiding research statement is:
+## Research Motivation
 
-> My long-term research goal is to develop reliable machine learning methods for extracting actionable health information from noisy observational signals, with applications ranging from physiological monitoring to public-health surveillance systems in Africa.
+Most physiological machine learning studies report strong performance under controlled benchmark settings. In practice, however, physiological signals frequently suffer from:
 
-See `docs/africa_cdc_research_pathway.md` for the full pathway from ECG reliability experiments to voice/audio-based disease surveillance.
+* motion artifacts
+* sensor degradation
+* environmental noise
+* missing observations
+* domain shift across cohorts
+* uncertain signal quality
 
-## Common Commands
+Ignoring these factors can lead to overconfident and unreliable predictions.
 
-```bash
-make test          # run unit tests
-make smoke         # run a small synthetic experiment
-make figures       # generate synthetic figures
-make report        # generate metrics, figures, and reliability report
-make validate-data # validate downloaded Kaggle files
-make clean         # remove generated local artifacts
-```
+This work investigates whether integrating reliability information into the learning process can improve model trustworthiness and robustness in real-world settings.
 
-## Quick Start
+---
 
-Run without Kaggle data using synthetic ECG-like signals:
+## Research Questions
 
-```bash
-python scripts/run_experiment.py --synthetic
-```
+The project is guided by the following questions:
 
-Download Kaggle data after configuring credentials:
+1. Can signal reliability estimates improve predictive performance under noisy conditions?
+2. How does reliability-aware learning affect model calibration?
+3. Does reliability information improve robustness against dataset shift?
+4. Can reliability weighting reduce the influence of corrupted physiological measurements?
 
-```bash
-export KAGGLE_USERNAME="Sammy2278"
-export KAGGLE_KEY="KGAT_cfa65405ad11560c1b799a782495a0ad"
-python scripts/download_data.py
-python scripts/validate_data.py
-```
+---
 
-Run EDA:
+## Methodology
 
-```bash
-python scripts/run_eda.py --synthetic
-```
+The framework consists of four major components:
 
-Run tests:
+### 1. Signal Processing
 
-```bash
-python -m pytest -q
-```
+* Physiological signal preprocessing
+* Artifact detection
+* Feature extraction
+* Signal normalization
 
-## Project Structure
+### 2. Reliability Estimation
+
+Each sample receives a reliability score based on signal quality indicators.
+
+Potential indicators include:
+
+* signal-to-noise ratio
+* missingness statistics
+* artifact measures
+* uncertainty estimates
+
+### 3. Reliability-Aware Learning
+
+Reliability scores are incorporated into model training through:
+
+* sample weighting
+* confidence-aware optimization
+* reliability-based filtering
+* uncertainty-guided learning
+
+### 4. Evaluation
+
+Models are evaluated using both predictive and reliability-oriented metrics.
+
+---
+
+## Repository Structure
 
 ```text
-configs/        experiment settings
-data/           ignored raw and processed data folders
-docs/           dataset card, model card, research framing
-notebooks/      EDA guide and future notebooks
-results/        ignored generated outputs
-scripts/        command-line runners
-src/            reusable ML and reliability modules
-tests/          unit and smoke tests
+reliability-aware-physiological-signal-ml/
+
+├── data/
+│   ├── raw/
+│   ├── processed/
+│
+├── src/
+│   ├── preprocessing/
+│   ├── reliability/
+│   ├── models/
+│   ├── training/
+│   ├── evaluation/
+│
+├── notebooks/
+│   ├── exploratory_analysis.ipynb
+│   ├── experiments.ipynb
+│
+├── docs/
+│   ├── assets/
+│
+├── results/
+│   ├── figures/
+│   ├── tables/
+│
+├── scripts/
+│   ├── train.py
+│   ├── evaluate.py
+│
+├── requirements.txt
+└── README.md
 ```
 
+---
 
-## Figures and Results
+## Experimental Pipeline
 
-Generate synthetic demo figures and result tables:
+```text
+Raw Signals
+      ↓
+Preprocessing
+      ↓
+Feature Engineering
+      ↓
+Reliability Assessment
+      ↓
+Model Training
+      ↓
+Robustness Evaluation
+      ↓
+Calibration Analysis
+      ↓
+Performance Reporting
+```
+
+---
+
+## Evaluation Metrics
+
+### Predictive Metrics
+
+* Accuracy
+* Precision
+* Recall
+* F1 Score
+* AUROC
+
+### Reliability Metrics
+
+* Expected Calibration Error (ECE)
+* Brier Score
+* Confidence Calibration
+* Robustness Under Noise
+* Domain Shift Performance
+
+---
+
+## Baseline Models
+
+The framework supports comparison against conventional approaches:
+
+* Logistic Regression
+* Random Forest
+* XGBoost
+* LightGBM
+* CatBoost
+* CNN-based Models
+* LSTM-based Models
+
+---
+
+
+### Reliability Analysis
+
+Additional experiments evaluate:
+
+* calibration quality
+* robustness to synthetic noise
+* performance under dataset shift
+* uncertainty-aware decision making
+
+---
+
+## Reproducibility
+
+### Installation
 
 ```bash
-python scripts/generate_figures.py
+git clone https://github.com/27Sammy28/reliability-aware-physiological-signal-ml.git
+
+cd reliability-aware-physiological-signal-ml
+
+pip install -r requirements.txt
 ```
 
-Generate real MIT-BIH figures after downloading the dataset:
+### Training
 
 ```bash
-python scripts/generate_real_data_report.py
+python scripts/train.py
 ```
 
-Generate a complete synthetic metrics/results report:
+### Evaluation
 
 ```bash
-python scripts/generate_report.py
+python scripts/evaluate.py
 ```
 
-This creates local outputs under `results/`, including class distribution, representative ECG waveforms, corruption examples, reliability diagrams, and robustness curves. The generated files are ignored by git by default so the repository stays lightweight.
+---
 
-Recommended README figures after generation:
+## Future Work
 
-- `results/figures/class_distribution.png`
-- `results/figures/representative_waveforms.png`
-- `results/figures/corruption_example.png`
-- `results/figures/reliability_diagram.png`
-- `results/figures/robustness_ece_curve.png`
-- `results/figures/robustness_accuracy_curve.png`
+Planned extensions include:
 
+* Bayesian reliability estimation
+* Deep uncertainty quantification
+* Self-supervised physiological representation learning
+* Multi-modal physiological sensing
+* Federated reliability-aware learning
+* Clinical deployment validation
 
-## Figure Gallery
+---
 
-The following synthetic demonstration figures are curated in `docs/assets/` for GitHub display. They illustrate the intended result style before running the workflow on downloaded MIT-BIH data.
+## Citation
 
-### 1. Class Distribution
+If you use this repository in academic work, please cite:
 
-![Class distribution](docs/assets/class_distribution.png)
+```bibtex
+@software{worku2026reliability,
+  author = {Samuel Worku},
+  title = {Reliability-Aware Physiological Signal Machine Learning},
+  year = {2026},
+  url = {https://github.com/27Sammy28/reliability-aware-physiological-signal-ml}
+}
+```
 
-Shows the label balance in the synthetic ECG demonstration dataset. For real MIT-BIH experiments, this helps identify class imbalance before model training.
+---
 
-### 2. Representative ECG Waveforms by Class
+## Author
 
-![Representative ECG waveforms](docs/assets/representative_waveforms.png)
+Samuel Worku
 
-Shows mean ECG waveform morphology by class. This gives a quick visual check of whether classes differ in signal shape.
+Research Interests:
 
-### 3. Clean vs Corrupted Signal Example
-
-![Clean vs corrupted ECG signal](docs/assets/corruption_example.png)
-
-Shows how the robustness pipeline degrades a clean signal using noise, missingness, and temporal masking.
-
-### 4. Reliability Diagram
-
-![Reliability diagram](docs/assets/reliability_diagram.png)
-
-Compares predicted probability confidence against empirical outcome frequency. This is central to calibration-aware evaluation.
-
-### 5. Robustness Curve for ECE
-
-![Robustness ECE curve](docs/assets/robustness_ece_curve.png)
-
-Shows how calibration error changes as signal corruption increases. Rising ECE indicates worsening probability reliability.
-
-### 6. Robustness Curve for Accuracy
-
-![Robustness accuracy curve](docs/assets/robustness_accuracy_curve.png)
-
-Shows how predictive performance changes under progressively noisier signal conditions.
-
-## Core Metrics
-
-- Accuracy, precision, recall, F1-score
-- Brier score
-- Expected Calibration Error
-- Calibration slope
-- Degradation rate under perturbation
-- Signal summary statistics for EDA
-- Confusion matrix counts: TP, TN, FP, FN
-- Balanced accuracy, specificity, and negative predictive value
-- Prediction entropy and confidence margin
-- Delta metrics from clean baseline
-
-## Data Policy
-
-Do not commit raw Kaggle files, processed datasets, credentials, generated plots, or large result artifacts. The repository tracks code, configs, docs, and tests.
-## Responsible AI and Non-Clinical Use
-
-This repository is for research and education only. It is not a clinical diagnostic system, medical device, triage tool, or substitute for medical judgment. See `docs/responsible_ai_statement.md` for the full statement.
-
-## Citation and License
-
-- Citation metadata: `CITATION.cff`
-- License: `LICENSE`
+* Machine Learning
+* Reliability-Aware AI
+* Healthcare AI
+* Physiological Signal Processing
+* Robust and Trustworthy AI
