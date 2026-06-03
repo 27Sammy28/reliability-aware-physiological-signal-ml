@@ -38,8 +38,8 @@ python scripts/run_experiment.py --synthetic
 Download Kaggle data after configuring credentials:
 
 ```bash
-export KAGGLE_USERNAME="your_username"
-export KAGGLE_KEY="your_api_key"
+export KAGGLE_USERNAME="Sammy2278"
+export KAGGLE_KEY="KGAT_cfa65405ad11560c1b799a782495a0ad"
 python scripts/download_data.py
 python scripts/validate_data.py
 ```
