@@ -1,236 +1,273 @@
-# Reliability-Aware Physiological Signal Machine Learning
+# Reliable Manifold Learning for Health Signals
+
+## Learning Robust Physiological Signal Representations Under Noise and Distribution Shift
+
+![Python](https://img.shields.io/badge/Python-3.10+-blue)
+![Machine Learning](https://img.shields.io/badge/Machine%20Learning-Unsupervised-green)
+![Signal Processing](https://img.shields.io/badge/Signal%20Processing-Health-orange)
+![Research](https://img.shields.io/badge/Research-Reproducible-red)
+
+---
 
 ## Overview
 
-Physiological signal machine learning systems are increasingly deployed in healthcare, wearable sensing, and remote monitoring applications. However, model performance is often degraded by signal corruption, motion artifacts, missing measurements, dataset shift, and unreliable sensor acquisition conditions.
+Physiological signals contain complex latent structures that are often hidden within high-dimensional observations.
 
-This project introduces a reliability-aware machine learning framework for physiological signal analysis that explicitly incorporates signal quality assessment into the prediction pipeline. Rather than optimizing predictive accuracy alone, the framework investigates how reliability estimation can improve robustness, calibration, and generalization under realistic deployment conditions.
+Traditional supervised learning approaches focus on prediction accuracy, but provide limited insight into the intrinsic organization of physiological signal populations.
 
-The repository provides a reproducible research pipeline for reliability-aware learning using physiological time-series data.
+This repository investigates representation learning and manifold discovery in physiological signals using modern dimensionality reduction and clustering techniques.
+
+The project studies how latent signal representations evolve under noise, corruption, and distribution shift, with a particular focus on representation reliability.
 
 ---
 
 ## Research Motivation
 
-Most physiological machine learning studies report strong performance under controlled benchmark settings. In practice, however, physiological signals frequently suffer from:
+Many healthcare machine learning systems assume that learned representations remain stable when signal quality deteriorates.
 
+In practice, physiological measurements frequently contain:
+
+* sensor noise
 * motion artifacts
-* sensor degradation
-* environmental noise
 * missing observations
-* domain shift across cohorts
-* uncertain signal quality
+* acquisition variability
+* cohort shift
 
-Ignoring these factors can lead to overconfident and unreliable predictions.
+These factors may distort latent signal structure and compromise downstream decision-making.
 
-This work investigates whether integrating reliability information into the learning process can improve model trustworthiness and robustness in real-world settings.
+This project investigates whether physiological signal embeddings remain meaningful under realistic observational uncertainty.
 
 ---
 
 ## Research Questions
 
-The project is guided by the following questions:
+### RQ1
 
-1. Can signal reliability estimates improve predictive performance under noisy conditions?
-2. How does reliability-aware learning affect model calibration?
-3. Does reliability information improve robustness against dataset shift?
-4. Can reliability weighting reduce the influence of corrupted physiological measurements?
+Can unsupervised representation learning reveal meaningful physiological signal structure?
+
+### RQ2
+
+How do PCA, UMAP, and t-SNE compare for health signal manifold discovery?
+
+### RQ3
+
+How stable are learned embeddings under progressively noisy signal conditions?
+
+### RQ4
+
+Can representation drift serve as an indicator of signal reliability?
 
 ---
 
 ## Methodology
 
-The framework consists of four major components:
+### Representation Learning
 
-### 1. Signal Processing
+The framework compares:
 
-* Physiological signal preprocessing
-* Artifact detection
-* Feature extraction
-* Signal normalization
+* Principal Component Analysis (PCA)
+* Uniform Manifold Approximation and Projection (UMAP)
+* t-Distributed Stochastic Neighbor Embedding (t-SNE)
 
-### 2. Reliability Estimation
+### Clustering
 
-Each sample receives a reliability score based on signal quality indicators.
+Discovered manifolds are evaluated using:
 
-Potential indicators include:
+* K-Means
+* DBSCAN
+* HDBSCAN
 
-* signal-to-noise ratio
-* missingness statistics
-* artifact measures
-* uncertainty estimates
+### Reliability Analysis
 
-### 3. Reliability-Aware Learning
+Embedding robustness is assessed through:
 
-Reliability scores are incorporated into model training through:
+* Gaussian noise injection
+* Temporal masking
+* Missingness simulation
+* Distribution shift experiments
 
-* sample weighting
-* confidence-aware optimization
-* reliability-based filtering
-* uncertainty-guided learning
+---
 
-### 4. Evaluation
+## Experimental Pipeline
 
-Models are evaluated using both predictive and reliability-oriented metrics.
+Raw ECG Signals
+↓
+Preprocessing
+↓
+Feature Extraction
+↓
+Representation Learning
+(PCA / UMAP / t-SNE)
+↓
+Clustering Analysis
+↓
+Noise Injection
+↓
+Embedding Drift Analysis
+↓
+Representation Reliability Evaluation
 
 ---
 
 ## Repository Structure
 
 ```text
-reliability-aware-physiological-signal-ml/
+reliable-manifold-learning-for-health-signals/
 
 ├── data/
-│   ├── raw/
-│   ├── processed/
-│
+├── notebooks/
 ├── src/
 │   ├── preprocessing/
-│   ├── reliability/
-│   ├── models/
-│   ├── training/
+│   ├── embeddings/
+│   ├── clustering/
+│   ├── robustness/
 │   ├── evaluation/
+│   └── visualization/
 │
-├── notebooks/
-│   ├── exploratory_analysis.ipynb
-│   ├── experiments.ipynb
-│
-├── docs/
-│   ├── assets/
-│
+├── experiments/
 ├── results/
-│   ├── figures/
-│   ├── tables/
-│
-├── scripts/
-│   ├── train.py
-│   ├── evaluate.py
-│
-├── requirements.txt
-└── README.md
-```
-
----
-
-## Experimental Pipeline
-
-```text
-Raw Signals
-      ↓
-Preprocessing
-      ↓
-Feature Engineering
-      ↓
-Reliability Assessment
-      ↓
-Model Training
-      ↓
-Robustness Evaluation
-      ↓
-Calibration Analysis
-      ↓
-Performance Reporting
+├── figures/
+├── docs/
+└── tests/
 ```
 
 ---
 
 ## Evaluation Metrics
 
-### Predictive Metrics
+### Embedding Quality
 
-* Accuracy
-* Precision
-* Recall
-* F1 Score
-* AUROC
+* Trustworthiness
+* Continuity
+* Silhouette Score
+* Davies-Bouldin Index
 
 ### Reliability Metrics
 
-* Expected Calibration Error (ECE)
-* Brier Score
-* Confidence Calibration
+* Embedding Drift Distance
+* Cluster Stability
+* Neighborhood Preservation
 * Robustness Under Noise
-* Domain Shift Performance
 
 ---
 
-## Baseline Models
+## Expected Outputs
 
-The framework supports comparison against conventional approaches:
+### UMAP Projection
 
-* Logistic Regression
-* Random Forest
-* XGBoost
-* LightGBM
-* CatBoost
-* CNN-based Models
-* LSTM-based Models
+Visualizing latent physiological structure.
 
----
+### Cluster Discovery
 
+Identification of naturally emerging signal groups.
 
-### Reliability Analysis
+### Embedding Drift Curves
 
-Additional experiments evaluate:
+Quantifying representation degradation as noise increases.
 
-* calibration quality
-* robustness to synthetic noise
-* performance under dataset shift
-* uncertainty-aware decision making
+### Reliability Maps
+
+Characterizing stable and unstable regions of the latent manifold.
 
 ---
 
-## Reproducibility
+## Scientific Contributions
 
-### Installation
+This project explores:
 
-```bash
-git clone https://github.com/27Sammy28/reliability-aware-physiological-signal-ml.git
+* unsupervised physiological signal learning
+* manifold analysis
+* representation robustness
+* trustworthy machine learning
+* reliability-aware health AI
 
-cd reliability-aware-physiological-signal-ml
+rather than conventional classification-focused benchmarking.
 
-pip install -r requirements.txt
-```
 
-### Training
 
-```bash
-python scripts/train.py
-```
+## Results
 
-### Evaluation
+### Dataset
 
-```bash
-python scripts/evaluate.py
-```
+Experiments were conducted using the Kaggle MIT-BIH heartbeat dataset derived from the MIT-BIH Arrhythmia Database.
 
----
+| Property         | Value                 |
+| ---------------- | --------------------- |
+| Training Samples | 87,554                |
+| Test Samples     | 21,892                |
+| Features         | 188                   |
+| Task             | Binary Classification |
+| Normal Class     | Label 0               |
+| Arrhythmia Class | Labels 1–4            |
 
-## Future Work
+For the binary classification setting, normal beats were treated as the negative class, while all arrhythmia categories were grouped into a single positive class.
 
-Planned extensions include:
-
-* Bayesian reliability estimation
-* Deep uncertainty quantification
-* Self-supervised physiological representation learning
-* Multi-modal physiological sensing
-* Federated reliability-aware learning
-* Clinical deployment validation
+Models were trained on a stratified subset of 12,000 training samples and evaluated on the full held-out test set.
 
 ---
 
-## Citation
+### Model Performance
 
-If you use this repository in academic work, please cite:
+| Model                  | Accuracy  | F1 Score  | AUROC     | AUPRC     | ECE   |
+| ---------------------- | --------- | --------- | --------- | --------- | ----- |
+| Logistic Regression    | 0.902     | 0.651     | 0.859     | 0.726     | 0.026 |
+| Linear SVM             | 0.872     | 0.625     | 0.852     | 0.675     | 0.201 |
+| Decision Tree          | 0.932     | 0.783     | 0.910     | 0.848     | 0.005 |
+| Random Forest          | **0.938** | **0.784** | **0.945** | **0.890** | 0.059 |
+| Gradient Boosted Trees | 0.828     | 0.000     | 0.834     | 0.527     | 0.112 |
 
-```bibtex
-@software{worku2026reliability,
-  author = {Samuel Worku},
-  title = {Reliability-Aware Physiological Signal Machine Learning},
-  year = {2026},
-  url = {https://github.com/27Sammy28/reliability-aware-physiological-signal-ml}
-}
-```
+---
+
+### Calibration Analysis
+
+Calibration quality varied substantially across models.
+
+| Model                  | Expected Calibration Error (ECE) |
+| ---------------------- | -------------------------------- |
+| Decision Tree          | **0.005**                        |
+| Logistic Regression    | 0.026                            |
+| Random Forest          | 0.059                            |
+| Gradient Boosted Trees | 0.112                            |
+| Linear SVM             | 0.201                            |
+
+Although Random Forest achieved the strongest overall predictive performance, Decision Trees produced the most reliable probability estimates according to Expected Calibration Error.
+
+---
+
+### Key Findings
+
+* Random Forest achieved the highest overall classification performance.
+* Decision Trees demonstrated exceptionally strong calibration quality.
+* Logistic Regression remained competitive despite its simplicity.
+* Linear SVM exhibited substantial calibration degradation.
+* Model reliability cannot be assessed using accuracy alone.
+* Calibration-aware evaluation provides additional insights beyond conventional performance metrics.
+
+---
+
+### Implications
+
+These findings support the central hypothesis of this repository:
+
+> Reliable physiological signal inference requires evaluating both predictive performance and probability quality.
+
+Models with strong accuracy may still produce poorly calibrated confidence estimates, highlighting the importance of reliability-aware evaluation in healthcare machine learning systems.
+
+---
+
+## Long-Term Research Vision
+
+The broader goal is to develop reliable machine learning systems for extracting actionable information from noisy observational signals.
+
+Future extensions include:
+
+* ECG signals
+* respiratory audio
+* cough signals
+* speech biomarkers
+* multimodal health sensing
+
+with applications in healthcare monitoring and public-health surveillance.
 
 ---
 
@@ -240,8 +277,8 @@ Samuel Worku
 
 Research Interests:
 
-* Machine Learning
-* Reliability-Aware AI
-* Healthcare AI
+* Representation Learning
+* Trustworthy AI
 * Physiological Signal Processing
-* Robust and Trustworthy AI
+* Scientific Machine Learning
+* Robust and Reliable Inference
