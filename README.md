@@ -1,41 +1,43 @@
-# Reliable Manifold Learning for Health Signals
+# Reliability-Aware ECG and Health Signal Machine Learning
 
-## Learning Robust Physiological Signal Representations Under Noise and Distribution Shift
+## Robust Machine Learning for Physiological Signal Inference Under Noise, Corruption, and Distribution Shift
 
 ![Python](https://img.shields.io/badge/Python-3.10+-blue)
-![Machine Learning](https://img.shields.io/badge/Machine%20Learning-Unsupervised-green)
-![Signal Processing](https://img.shields.io/badge/Signal%20Processing-Health-orange)
+![Machine Learning](https://img.shields.io/badge/Machine%20Learning-Healthcare-green)
+![Signal Processing](https://img.shields.io/badge/Signal%20Processing-ECG-orange)
 ![Research](https://img.shields.io/badge/Research-Reproducible-red)
 
 ---
 
 ## Overview
 
-Physiological signals contain complex latent structures that are often hidden within high-dimensional observations.
+Physiological machine learning systems operate on observational signals that are inherently noisy, incomplete, and subject to distribution shift.
 
-Traditional supervised learning approaches focus on prediction accuracy, but provide limited insight into the intrinsic organization of physiological signal populations.
+While many healthcare AI studies emphasize predictive accuracy, far fewer investigate whether model predictions remain reliable when signal quality deteriorates.
 
-This repository investigates representation learning and manifold discovery in physiological signals using modern dimensionality reduction and clustering techniques.
+This repository presents a reproducible framework for studying reliability-aware machine learning using physiological signals. The current implementation focuses on ECG heartbeat classification using the MIT-BIH Arrhythmia dataset, while the broader research direction extends toward robust inference from health-related signals such as ECG, respiratory audio, cough recordings, and speech biomarkers.
 
-The project studies how latent signal representations evolve under noise, corruption, and distribution shift, with a particular focus on representation reliability.
+The primary goal is to evaluate not only predictive performance but also calibration quality, robustness, and reliability under realistic observational uncertainty.
 
 ---
 
 ## Research Motivation
 
-Many healthcare machine learning systems assume that learned representations remain stable when signal quality deteriorates.
+Healthcare machine learning systems are often deployed in environments where signals are corrupted by noise, missing observations, sensor variability, and distribution shift.
 
-In practice, physiological measurements frequently contain:
+Small methodological mistakes can produce overly optimistic performance estimates while reducing real-world reliability.
 
-* sensor noise
-* motion artifacts
-* missing observations
-* acquisition variability
-* cohort shift
+Common failure modes include:
 
-These factors may distort latent signal structure and compromise downstream decision-making.
+* signal corruption
+* acquisition noise
+* calibration instability
+* class imbalance
+* domain shift
+* overfitting
+* unreliable confidence estimates
 
-This project investigates whether physiological signal embeddings remain meaningful under realistic observational uncertainty.
+This project investigates how machine learning models behave under these challenges and explores reliability-aware evaluation strategies for physiological signal inference.
 
 ---
 
@@ -43,231 +45,223 @@ This project investigates whether physiological signal embeddings remain meaning
 
 ### RQ1
 
-Can unsupervised representation learning reveal meaningful physiological signal structure?
+How does physiological signal quality affect machine learning performance?
 
 ### RQ2
 
-How do PCA, UMAP, and t-SNE compare for health signal manifold discovery?
+Do calibration metrics reveal reliability issues not captured by accuracy alone?
 
 ### RQ3
 
-How stable are learned embeddings under progressively noisy signal conditions?
+Which machine learning models remain most stable under noisy signal conditions?
 
 ### RQ4
 
-Can representation drift serve as an indicator of signal reliability?
+Can reliability-aware evaluation improve trustworthiness in healthcare AI systems?
+
+---
+
+## Dataset
+
+Experiments were conducted using the Kaggle MIT-BIH heartbeat dataset derived from the MIT-BIH Arrhythmia Database.
+
+| Property         | Value                     |
+| ---------------- | ------------------------- |
+| Training Samples | 87,554                    |
+| Test Samples     | 21,892                    |
+| Features         | 188                       |
+| Task             | Binary ECG Classification |
+| Normal Class     | Label 0                   |
+| Arrhythmia Class | Labels 1–4                |
+
+For this study, normal beats were treated as the negative class, while all arrhythmia categories were grouped into a single positive class.
+
+Models were trained on a stratified subset of 12,000 training samples and evaluated on the full held-out test set.
 
 ---
 
 ## Methodology
 
-### Representation Learning
+### Preprocessing
 
-The framework compares:
+* ECG signal normalization
+* Dataset quality verification
+* Stratified train-test splitting
 
-* Principal Component Analysis (PCA)
-* Uniform Manifold Approximation and Projection (UMAP)
-* t-Distributed Stochastic Neighbor Embedding (t-SNE)
+### Machine Learning Models
 
-### Clustering
+The framework currently evaluates:
 
-Discovered manifolds are evaluated using:
+* Logistic Regression
+* Linear Support Vector Machine (SVM)
+* Decision Tree
+* Random Forest
+* Gradient Boosted Trees
 
-* K-Means
-* DBSCAN
-* HDBSCAN
+### Reliability Evaluation
 
-### Reliability Analysis
+Beyond standard classification metrics, the framework includes:
 
-Embedding robustness is assessed through:
-
-* Gaussian noise injection
-* Temporal masking
-* Missingness simulation
-* Distribution shift experiments
+* Expected Calibration Error (ECE)
+* Brier Score
+* Calibration Analysis
+* Reliability Diagnostics
+* Probability Quality Assessment
 
 ---
 
 ## Experimental Pipeline
 
-Raw ECG Signals
+ECG Signals
+
 ↓
+
+Data Validation
+
+↓
+
 Preprocessing
+
 ↓
+
 Feature Extraction
+
 ↓
-Representation Learning
-(PCA / UMAP / t-SNE)
+
+Machine Learning Models
+
 ↓
-Clustering Analysis
+
+Calibration Analysis
+
 ↓
-Noise Injection
+
+Reliability Evaluation
+
 ↓
-Embedding Drift Analysis
-↓
-Representation Reliability Evaluation
+
+Performance Comparison
+
+---
+
+## Results
+
+### Classification Performance
+
+| Model                  | Accuracy  | F1        | AUROC     | AUPRC     | ECE       |
+| ---------------------- | --------- | --------- | --------- | --------- | --------- |
+| Logistic Regression    | 0.902     | 0.651     | 0.859     | 0.726     | 0.026     |
+| Linear SVM             | 0.872     | 0.625     | 0.852     | 0.675     | 0.201     |
+| Decision Tree          | 0.932     | 0.783     | 0.910     | 0.848     | **0.005** |
+| Random Forest          | **0.938** | **0.784** | **0.945** | **0.890** | 0.059     |
+| Gradient Boosted Trees | 0.828     | 0.000     | 0.834     | 0.527     | 0.112     |
+
+---
+
+### Calibration Analysis
+
+Expected Calibration Error (ECE) was used to assess probability reliability.
+
+| Model                  | ECE       |
+| ---------------------- | --------- |
+| Decision Tree          | **0.005** |
+| Logistic Regression    | 0.026     |
+| Random Forest          | 0.059     |
+| Gradient Boosted Trees | 0.112     |
+| Linear SVM             | 0.201     |
+
+Lower ECE indicates better agreement between predicted probabilities and observed outcomes.
+
+---
+
+### Key Findings
+
+* Random Forest achieved the strongest overall predictive performance.
+* Decision Tree produced the most reliable probability estimates.
+* Logistic Regression remained a competitive and well-calibrated baseline.
+* Linear SVM exhibited substantial calibration degradation.
+* Calibration metrics revealed important differences not captured by accuracy alone.
+* Reliable healthcare AI requires evaluating probability quality in addition to predictive performance.
 
 ---
 
 ## Repository Structure
 
 ```text
-reliable-manifold-learning-for-health-signals/
+reliability-aware-physiological-signal-ml/
 
 ├── data/
+│   ├── raw/
+│   ├── processed/
+│   └── metadata/
+│
 ├── notebooks/
+│
 ├── src/
 │   ├── preprocessing/
-│   ├── embeddings/
-│   ├── clustering/
+│   ├── corruption/
+│   ├── models/
+│   ├── calibration/
 │   ├── robustness/
 │   ├── evaluation/
-│   └── visualization/
+│   ├── visualization/
+│   └── utils/
 │
 ├── experiments/
 ├── results/
 ├── figures/
 ├── docs/
-└── tests/
+├── scripts/
+├── tests/
+│
+├── requirements.txt
+├── LICENSE
+└── README.md
 ```
 
 ---
 
-## Evaluation Metrics
+## Future Research Directions
 
-### Embedding Quality
+Planned extensions include:
 
-* Trustworthiness
-* Continuity
-* Silhouette Score
-* Davies-Bouldin Index
-
-### Reliability Metrics
-
-* Embedding Drift Distance
-* Cluster Stability
-* Neighborhood Preservation
-* Robustness Under Noise
+* synthetic signal corruption experiments
+* robustness benchmarking
+* uncertainty quantification
+* calibration-aware model selection
+* physiological signal representation learning
+* speech and voice biomarker analysis
+* respiratory audio monitoring
+* multimodal health signal learning
+* public-health surveillance applications
 
 ---
 
-## Expected Outputs
+## Long-Term Vision
 
-### UMAP Projection
+The broader goal of this research is to develop reliable machine learning methods for extracting actionable information from noisy observational signals.
 
-Visualizing latent physiological structure.
-
-### Cluster Discovery
-
-Identification of naturally emerging signal groups.
-
-### Embedding Drift Curves
-
-Quantifying representation degradation as noise increases.
-
-### Reliability Maps
-
-Characterizing stable and unstable regions of the latent manifold.
+Future work aims to bridge physiological signal processing, trustworthy AI, and public-health analytics, with potential applications in disease surveillance, health monitoring, and population-level decision support systems.
 
 ---
 
-## Scientific Contributions
+## Responsible AI Statement
 
-This project explores:
+This repository is intended for research and educational purposes only.
 
-* unsupervised physiological signal learning
-* manifold analysis
-* representation robustness
-* trustworthy machine learning
-* reliability-aware health AI
-
-rather than conventional classification-focused benchmarking.
-
-
-
-## Results
-
-### Dataset
-
-Experiments were conducted using the Kaggle MIT-BIH heartbeat dataset derived from the MIT-BIH Arrhythmia Database.
-
-| Property         | Value                 |
-| ---------------- | --------------------- |
-| Training Samples | 87,554                |
-| Test Samples     | 21,892                |
-| Features         | 188                   |
-| Task             | Binary Classification |
-| Normal Class     | Label 0               |
-| Arrhythmia Class | Labels 1–4            |
-
-For the binary classification setting, normal beats were treated as the negative class, while all arrhythmia categories were grouped into a single positive class.
-
-Models were trained on a stratified subset of 12,000 training samples and evaluated on the full held-out test set.
+The models and outputs presented here are not approved for clinical diagnosis, medical decision-making, or deployment in healthcare settings.
 
 ---
 
-### Model Performance
+## Citation
 
-| Model                  | Accuracy  | F1 Score  | AUROC     | AUPRC     | ECE   |
-| ---------------------- | --------- | --------- | --------- | --------- | ----- |
-| Logistic Regression    | 0.902     | 0.651     | 0.859     | 0.726     | 0.026 |
-| Linear SVM             | 0.872     | 0.625     | 0.852     | 0.675     | 0.201 |
-| Decision Tree          | 0.932     | 0.783     | 0.910     | 0.848     | 0.005 |
-| Random Forest          | **0.938** | **0.784** | **0.945** | **0.890** | 0.059 |
-| Gradient Boosted Trees | 0.828     | 0.000     | 0.834     | 0.527     | 0.112 |
-
----
-
-### Calibration Analysis
-
-Calibration quality varied substantially across models.
-
-| Model                  | Expected Calibration Error (ECE) |
-| ---------------------- | -------------------------------- |
-| Decision Tree          | **0.005**                        |
-| Logistic Regression    | 0.026                            |
-| Random Forest          | 0.059                            |
-| Gradient Boosted Trees | 0.112                            |
-| Linear SVM             | 0.201                            |
-
-Although Random Forest achieved the strongest overall predictive performance, Decision Trees produced the most reliable probability estimates according to Expected Calibration Error.
-
----
-
-### Key Findings
-
-* Random Forest achieved the highest overall classification performance.
-* Decision Trees demonstrated exceptionally strong calibration quality.
-* Logistic Regression remained competitive despite its simplicity.
-* Linear SVM exhibited substantial calibration degradation.
-* Model reliability cannot be assessed using accuracy alone.
-* Calibration-aware evaluation provides additional insights beyond conventional performance metrics.
-
----
-
-### Implications
-
-These findings support the central hypothesis of this repository:
-
-> Reliable physiological signal inference requires evaluating both predictive performance and probability quality.
-
-Models with strong accuracy may still produce poorly calibrated confidence estimates, highlighting the importance of reliability-aware evaluation in healthcare machine learning systems.
-
----
-
-## Long-Term Research Vision
-
-The broader goal is to develop reliable machine learning systems for extracting actionable information from noisy observational signals.
-
-Future extensions include:
-
-* ECG signals
-* respiratory audio
-* cough signals
-* speech biomarkers
-* multimodal health sensing
-
-with applications in healthcare monitoring and public-health surveillance.
+```bibtex
+@article{worku2026reliability,
+  title={Reliability-Aware ECG and Health Signal Machine Learning},
+  author={Worku, Samuel},
+  year={2026}
+}
+```
 
 ---
 
@@ -275,10 +269,12 @@ with applications in healthcare monitoring and public-health surveillance.
 
 Samuel Worku
 
-Research Interests:
+Research Interests
 
-* Representation Learning
 * Trustworthy AI
+* Healthcare Machine Learning
 * Physiological Signal Processing
-* Scientific Machine Learning
-* Robust and Reliable Inference
+* Calibration and Reliability
+* Robust Machine Learning
+* Scientific AI
+* Public Health Analytics
