@@ -1,225 +1,211 @@
-# Reliability-Aware Machine Learning for Physiological Signal Analysis
+# Reliability-Aware Machine Learning for Noisy Health Signals
 
-### Towards Trustworthy AI for Noisy, Corrupted, and Real-World Physiological Data
+![Python](https://img.shields.io/badge/python-3.11%2B-blue)
+![Tests](https://img.shields.io/badge/tests-pytest-green)
+![Status](https://img.shields.io/badge/status-research--prototype-orange)
+![Focus](https://img.shields.io/badge/focus-calibration%20%7C%20robustness%20%7C%20signal%20AI-purple)
 
----
+This repository is a research portfolio project on **reliable machine learning for noisy physiological and health signals**. The current implementation uses ECG heartbeat classification as a controlled testbed, then evaluates whether models remain useful when signals become noisy, incomplete, imbalanced, or poorly calibrated.
 
-## Overview
+The project is intentionally framed for graduate-level research in **statistical signal processing, health AI, speech/audio analytics, and trustworthy machine learning**. It is especially aligned with ASU-style health-signal research directions connected to noisy observational signals, clinically meaningful inference, and responsible deployment under real-world measurement uncertainty.
 
-Physiological signals such as ECG, PPG, EDA, respiration, EEG, and wearable sensor streams form the foundation of modern digital health systems.
+> Core idea: a model is not reliable just because it is accurate on a clean benchmark. For health signals, we also need calibrated probabilities, robustness curves, confusion-matrix error analysis, and transparent reproducibility.
 
-However, real-world physiological data are rarely clean.
+## Research Fit and ASU Alignment
 
-Motion artifacts, sensor displacement, missing measurements, hardware failures, environmental noise, and signal degradation can severely impact downstream machine learning models.
+This work is designed to be compatible with research interests at Arizona State University in signal processing and health-focused AI, including the broader direction associated with Professor Visar Berisha: extracting clinically meaningful information from noisy speech, audio, language, and physiological signals.
 
-As a result, many models that perform well in controlled settings fail when deployed in practical environments.
+The ECG component is a first benchmark because ECG waveforms provide a well-known physiological signal domain with interpretable signal corruption experiments. The longer-term direction is to extend the same reliability framework to:
 
-This project investigates reliability-aware machine learning methods that explicitly account for signal quality, uncertainty, and data integrity during physiological signal analysis.
+- speech and voice biomarkers;
+- cough and respiratory audio;
+- low-cost smartphone health sensing;
+- noisy public-health surveillance signals;
+- low-resource clinical and community settings.
 
-Rather than assuming that all data are equally trustworthy, the framework evaluates signal reliability before and during model learning.
+This makes the repository more than an ECG classifier. It is a reusable framework for asking a broader question: **when can machine-learning predictions from noisy health signals be trusted?**
 
-The goal is to develop machine learning systems that remain robust under realistic sensing conditions.
+## Main Contributions
 
----
+- **Reliability-aware evaluation:** reports discrimination, calibration, and robustness instead of accuracy alone.
+- **Signal corruption pipeline:** tests Gaussian noise, missingness, and degradation across controlled severity levels.
+- **Calibration analysis:** includes Brier score, Expected Calibration Error, calibration slope, and reliability diagrams.
+- **Error-pattern analysis:** uses confusion matrices to expose clinically relevant false-negative and false-positive behavior.
+- **Reproducible research scaffold:** separates source code, configs, documentation, result artifacts, and responsible-AI notes.
+- **Future modality bridge:** positions ECG as a prototype for speech, voice, cough, respiratory, and language-based health AI.
 
-## Scientific Motivation
+## Current Results Snapshot
 
-Traditional machine learning pipelines typically assume that physiological signals are accurate representations of the underlying biological process.
+The implemented binary MIT-BIH experiment treats label `0` as normal and labels `1--4` as arrhythmia-positive. Models were trained on a stratified 12,000-row subset of the training split and evaluated on the full test split.
 
-In practice, this assumption is often violated.
+| Result Area | What It Shows | Why It Matters |
+|---|---|---|
+| Model comparison | Random Forest reached the strongest AUROC/AUPRC among implemented baselines | Ranking performance differs across model families |
+| Confusion matrix | Normal beats are easier than arrhythmia-positive beats for the logistic baseline | Aggregate accuracy can hide missed positive cases |
+| Reliability diagram | Probability confidence does not always match empirical correctness | Calibration is essential for health-risk interpretation |
+| Robustness curves | Accuracy and ECE change as noise severity increases | Deployment noise affects both discrimination and trustworthiness |
 
-Signal corruption can lead to:
+### Reported Baseline Metrics
 
-* Incorrect physiological interpretation
-* Reduced model generalization
-* Increased prediction uncertainty
-* Dataset bias
-* Unreliable clinical decision support
+| Model | Accuracy | F1 | AUROC | AUPRC | ECE |
+|---|---:|---:|---:|---:|---:|
+| Logistic Regression | 0.902 | 0.651 | 0.859 | 0.726 | 0.026 |
+| Linear SVM | 0.872 | 0.625 | 0.852 | 0.675 | 0.201 |
+| Decision Tree | 0.932 | 0.783 | 0.910 | 0.848 | 0.005 |
+| Random Forest | 0.938 | 0.784 | 0.945 | 0.890 | 0.059 |
+| Gradient Boosted Trees | 0.828 | 0.000 | 0.834 | 0.527 | 0.112 |
 
-This project explores whether reliability-aware learning can improve robustness and trustworthiness in physiological signal analysis.
+### Three Takeaways
 
----
+1. **Accuracy is incomplete:** models with useful AUROC can still have weak threshold behavior or calibration problems.
+2. **Calibration changes the story:** reliability diagrams and ECE reveal whether predicted probabilities are trustworthy.
+3. **Noise stress testing is necessary:** robustness curves show how performance and confidence degrade under corrupted signals.
 
-## Research Question
+## Figure Gallery
 
-> Can machine learning systems achieve more reliable physiological signal analysis by explicitly modeling signal quality and reliability during representation learning and prediction?
+The curated figures below are stored in `docs/assets/` for GitHub display and paper integration.
 
----
+### Confusion Matrix
 
-## Scientific Hypothesis
+![Confusion matrix](docs/assets/confusion_matrix.png)
 
-Hypothesis:
+Shows the baseline error structure for the binary MIT-BIH task. This is important for health AI because false negatives and false positives have different practical consequences.
 
-Physiological signal reliability contains important information that is ignored by conventional machine learning pipelines.
+### Reliability Diagram
 
-By incorporating signal-quality information into the learning process, models can become more robust to artifacts, missing data, and sensor degradation while maintaining strong predictive performance.
+![Reliability diagram](docs/assets/reliability_diagram.png)
 
----
+Compares predicted probability confidence against empirical positive-class frequency. Points closer to the diagonal indicate better calibration.
 
-## Key Contributions
+### Robustness Curve: Accuracy
 
-### Reliability-Aware Framework
+![Robustness accuracy curve](docs/assets/robustness_accuracy_curve.png)
 
-* Signal quality assessment
-* Reliability estimation
-* Data integrity analysis
-* Artifact-aware preprocessing
+Shows how predictive performance changes under progressively noisier ECG-like inputs.
 
-### Machine Learning Pipeline
+### Robustness Curve: Expected Calibration Error
 
-* Physiological feature extraction
-* Reliability-guided learning
-* Robust model training
-* Performance comparison against conventional approaches
+![Robustness ECE curve](docs/assets/robustness_ece_curve.png)
 
-### Scientific Evaluation
+Shows how probability reliability changes under signal corruption. Rising ECE indicates that model confidence becomes less dependable.
 
-* Prediction accuracy
-* Reliability calibration
-* Robustness under noisy conditions
-* Sensitivity to signal corruption
+### Signal Corruption Example
 
----
+![Clean vs corrupted ECG signal](docs/assets/corruption_example.png)
 
-## Methodology
+Illustrates the type of signal degradation used in robustness experiments.
+
+### Representative Waveforms
+
+![Representative ECG waveforms](docs/assets/representative_waveforms.png)
+
+Shows average ECG-like waveform morphology by class in the demonstration pipeline.
+
+## Repository Structure
 
 ```text
-Raw Physiological Signals
-            │
-            ▼
-Signal Quality Assessment
-            │
-            ▼
-Reliability Estimation
-            │
-            ▼
-Feature Extraction
-            │
-            ▼
-Reliability-Aware Learning
-            │
-            ▼
-Prediction and Evaluation
-            │
-            ▼
-Robustness Analysis
+configs/        experiment settings and reproducibility configuration
+data/           data access notes; raw datasets are not committed
+docs/           research framing, model cards, governance, validation plans
+examples/       reproducible command examples
+experiments/    named experiment configurations
+notebooks/      exploratory-analysis guide
+results/        generated metrics and reports; large outputs should remain local
+scripts/        command-line workflows for training, figures, reports, validation
+src/            reusable data, perturbation, modeling, metric, and reporting code
+tests/          unit and smoke tests for core reliability utilities
+main.tex        manuscript-style writeup of the ECG reliability study
 ```
 
----
+## Quick Start
 
-## Physiological Signals
+Run the project without downloading external data:
 
-The framework is designed for a wide range of physiological modalities:
-
-* Electrocardiography (ECG)
-* Photoplethysmography (PPG)
-* Electrodermal Activity (EDA)
-* Respiration Signals
-* Electroencephalography (EEG)
-* Wearable Motion Sensors
-
----
-
-## Evaluation Framework
-
-The system is evaluated using multiple criteria:
-
-| Category                   | Purpose                               |
-| -------------------------- | ------------------------------------- |
-| Predictive Performance     | Measures task accuracy                |
-| Reliability Calibration    | Measures confidence quality           |
-| Noise Robustness           | Measures stability under corruption   |
-| Signal Quality Sensitivity | Measures dependence on data integrity |
-
----
-
-## Key Research Questions
-
-This project investigates:
-
-* How strongly does signal quality influence model performance?
-* Can reliability estimates improve prediction robustness?
-* Which physiological modalities are most vulnerable to corruption?
-* How should uncertainty be incorporated into physiological AI systems?
-
----
-
-## Potential Applications
-
-### Digital Health
-
-* Continuous patient monitoring
-* Remote health assessment
-* Wearable health technologies
-
-### Biomedical AI
-
-* Physiological representation learning
-* Health-state prediction
-* Robust biosignal analytics
-
-### Trustworthy AI
-
-* Reliability-aware learning
-* Uncertainty estimation
-* Interpretable machine learning
-* Safety-critical AI systems
-
----
-
-## Scientific Significance
-
-This work contributes to the emerging intersection of:
-
-* Machine Learning for Healthcare
-* Digital Health
-* Physiological Computing
-* Signal Quality Assessment
-* Trustworthy Artificial Intelligence
-* Scientific Machine Learning
-
-The project emphasizes not only predictive performance but also reliability, robustness, and scientific validity.
-
----
-
-## Future Directions
-
-### Machine Learning
-
-* Self-supervised physiological representation learning
-* Contrastive learning
-* Foundation models for biosignals
-* Multimodal fusion
-
-### Reliability Research
-
-* Uncertainty-aware inference
-* Reliability-guided feature learning
-* Missing-modality adaptation
-* Real-time signal integrity monitoring
-
----
-
-## Conclusion
-
-Reliable physiological signal analysis remains a fundamental challenge in machine learning for healthcare.
-
-This project explores a reliability-aware framework that treats signal quality as a first-class component of the learning process rather than a preprocessing afterthought.
-
-By integrating reliability estimation, robustness analysis, and machine learning, the framework aims to support the development of more trustworthy and deployable AI systems for physiological sensing and digital health applications.
-
----
-
-## Research Areas
-
-* Digital Health
-* Physiological Signal Processing
-* Biomedical AI
-* Trustworthy AI
-* Machine Learning for Healthcare
-* Signal Quality Assessment
-* Scientific Machine Learning
-* Wearable Computing
-
+```bash
+python scripts/run_experiment.py --synthetic
 ```
+
+Generate the README/paper figures:
+
+```bash
+python scripts/generate_figures.py --output-dir docs/assets --results-dir results
 ```
+
+Run tests:
+
+```bash
+python -m pytest -q
+```
+
+Compile the manuscript:
+
+```bash
+pdflatex -interaction=nonstopmode -halt-on-error main.tex
+```
+
+## Real MIT-BIH Workflow
+
+Raw clinical or benchmark datasets should not be committed to the repository. After obtaining the Kaggle MIT-BIH heartbeat CSV files locally, use:
+
+```bash
+python scripts/validate_data.py
+python scripts/generate_real_data_report.py
+python scripts/generate_model_comparison.py
+```
+
+The intended real-data workflow is:
+
+1. obtain data from the official source;
+2. validate file schema and label structure;
+3. fit preprocessing only on training data;
+4. evaluate clean-test performance;
+5. run corruption and robustness sweeps;
+6. generate reliability diagrams, confusion matrices, and metric summaries;
+7. document limitations and non-clinical use.
+
+## Core Metrics
+
+- Accuracy, precision, recall, F1-score, AUROC, and AUPRC
+- Confusion matrix counts: TP, TN, FP, FN
+- Brier score and Expected Calibration Error
+- Calibration slope and reliability diagrams
+- Robustness degradation under perturbation
+- Prediction entropy and confidence margin
+- Balanced accuracy, specificity, and negative predictive value
+
+## Research Documentation
+
+- Project summary: `docs/project_summary.md`
+- Research framing: `docs/research_framing.md`
+- Supervisor pitch: `docs/supervisor_pitch.md`
+- Literature notes: `docs/literature_notes.md`
+- Architecture: `docs/architecture.md`
+- Dataset card: `docs/dataset_card.md`
+- Model card: `docs/model_card.md`
+- External validation plan: `docs/external_validation_plan.md`
+- Bias and subgroup plan: `docs/bias_and_subgroup_plan.md`
+- Responsible-AI statement: `docs/responsible_ai_statement.md`
+- Africa CDC pathway: `docs/africa_cdc_research_pathway.md`
+
+## Long-Term Research Pathway
+
+The planned extension is to move from ECG reliability experiments toward **speech/audio health-signal reliability**. The same evaluation logic can be reused for microphone noise, device mismatch, background sound, speaker variation, language variation, and clinical subgroup shift.
+
+Potential future experiments include:
+
+- voice/cough/respiratory audio corruption sweeps;
+- cross-device and cross-population validation;
+- interpretable acoustic or physiological feature analysis;
+- uncertainty-aware triage support;
+- conformal prediction for abstention under uncertainty;
+- low-resource public-health surveillance evaluation.
+
+## Responsible AI and Non-Clinical Use
+
+This repository is for research and education only. It is **not** a clinical diagnostic system, medical device, triage tool, or substitute for medical judgment. Any clinical or public-health use would require independent validation, ethics review, representative datasets, subgroup analysis, privacy safeguards, and prospective evaluation.
+
+See `docs/responsible_ai_statement.md` for the full statement.
+
+## Data and Artifact Policy
+
+Do not commit raw Kaggle files, credentials, private health data, generated PDFs, large result folders, or unreviewed model artifacts. The repository should track source code, reproducibility configs, documentation, tests, and selected lightweight figures needed for communication.
