@@ -67,7 +67,7 @@ The curated figures below are stored in `docs/assets/` for GitHub display and pa
 
 ### Confusion Matrix
 
-![Confusion matrix](docs/assets/confusion_matrix.png)
+![Confusion matrix](docs/assets/confusion_matrix.pngg)
 
 Shows the baseline error structure for the binary MIT-BIH task. This is important for health AI because false negatives and false positives have different practical consequences.
 
