@@ -63,40 +63,41 @@ The implemented binary MIT-BIH experiment treats label `0` as normal and labels 
 
 ## Figure Gallery
 
-The curated figures below are stored in `docs/assets/` for GitHub display and paper integration.
+The curated figures below are stored in `doc/assets/` for GitHub display and paper integration.
 
 ### Confusion Matrix
 
-![Confusion matrix](docs/assets/confusion_matrix.png)
+![Confusion matrix](doc/assets/confusion_matrix.png)
+
 Shows the baseline error structure for the binary MIT-BIH task. This is important for health AI because false negatives and false positives have different practical consequences.
 
 ### Reliability Diagram
 
-![Reliability diagram](docs/assets/reliability_diagram.png)
+![Reliability diagram](doc/assets/reliability_diagram.png)
 
 Compares predicted probability confidence against empirical positive-class frequency. Points closer to the diagonal indicate better calibration.
 
 ### Robustness Curve: Accuracy
 
-![Robustness accuracy curve](docs/assets/robustness_accuracy_curve.png)
+![Robustness accuracy curve](doc/assets/robustness_accuracy_curve.png)
 
 Shows how predictive performance changes under progressively noisier ECG-like inputs.
 
 ### Robustness Curve: Expected Calibration Error
 
-![Robustness ECE curve](docs/assets/robustness_ece_curve.png)
+![Robustness ECE curve](doc/assets/robustness_ece_curve.png)
 
 Shows how probability reliability changes under signal corruption. Rising ECE indicates that model confidence becomes less dependable.
 
 ### Signal Corruption Example
 
-![Clean vs corrupted ECG signal](docs/assets/corruption_example.png)
+![Clean vs corrupted ECG signal](doc/assets/corruption_example.png)
 
 Illustrates the type of signal degradation used in robustness experiments.
 
 ### Representative Waveforms
 
-![Representative ECG waveforms](docs/assets/representative_waveforms.png)
+![Representative ECG waveforms](doc/assets/representative_waveforms.png)
 
 Shows average ECG-like waveform morphology by class in the demonstration pipeline.
 
@@ -127,7 +128,7 @@ python scripts/run_experiment.py --synthetic
 Generate the README/paper figures:
 
 ```bash
-python scripts/generate_figures.py --output-dir docs/assets --results-dir results
+python scripts/generate_figures.py --output-dir doc/assets --results-dir results
 ```
 
 Run tests:
