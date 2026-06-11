@@ -47,7 +47,7 @@ In future extensions, this can become a full method by adding:
 
 ## Architecture Overview
 
-![Reliability-aware architecture](doc/assets/architecture_diagram.png)
+![Reliability-aware architecture](doc/assets/architecture_diagram.png.png)
 
 The pipeline separates signal preprocessing, model prediction, reliability estimation, perturbation stress testing, and final reporting. This structure makes the repository compatible with future multimodal health-signal experiments such as ECG--PPG fusion, speech/audio biomarkers, or wearable sensor streams.
 
