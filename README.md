@@ -11,6 +11,20 @@ The project is intentionally framed for graduate-level research in **statistical
 
 > Core idea: a model is not reliable just because it is accurate on a clean benchmark. For health signals, we also need calibrated probabilities, robustness curves, confusion-matrix error analysis, and transparent reproducibility.
 
+## Research Abstract
+
+This project investigates reliability-aware machine learning for noisy physiological signals. Using ECG heartbeat classification as a testbed, it evaluates model discrimination, calibration, robustness, and failure behavior under controlled signal corruption. The goal is to develop machine-learning evaluation tools whose confidence estimates remain meaningful under real-world measurement uncertainty.
+
+## Visual Overview
+
+![Reliability-aware workflow](doc/assets/reliability_workflow_diagram.png.png)
+
+The workflow follows the core research logic: signal input, leakage-safe preprocessing, model prediction, reliability analysis, calibration evaluation, robustness testing, and decision-support reporting.
+
+## Research Impact
+
+This framework provides a reproducible benchmark for studying trustworthy machine learning in health-signal settings. Beyond ECG classification, the same approach can extend to speech biomarkers, wearable sensing, respiratory audio, multimodal clinical AI, and low-resource public-health surveillance.
+
 ## Research Fit and ASU Alignment
 
 This work is designed to be compatible with research interests at Arizona State University in signal processing and health-focused AI, including the broader direction associated with Professor Visar Berisha: extracting clinically meaningful information from noisy speech, audio, language, and physiological signals.
@@ -36,11 +50,11 @@ This makes the repository more than an ECG classifier. It is a reusable framewor
 
 ## Sharper Research Contribution
 
-The research contribution is not simply another ECG classifier. The project studies a **reliability-aware evaluation layer** for noisy biomedical signals: models are compared by clean discrimination, probability calibration, perturbation robustness, and error-pattern behavior under degraded signal quality.
+The current contribution is not simply another ECG classifier. The project implements a **reliability-aware evaluation framework** for noisy biomedical signals: models are compared by clean discrimination, probability calibration, perturbation robustness, and error-pattern behavior under degraded signal quality.
 
-In future extensions, this can become a full method by adding:
+The current benchmark directly supports method development in these directions:
 
-- **reliability-weighted fusion:** down-weighting noisy or missing modalities before prediction;
+- **reliability-weighted fusion:** using reliability scores to down-weight noisy or missing modalities;
 - **uncertainty-guided masking:** identifying signal regions or modalities that should contribute less under corruption;
 - **noise-aware representation learning:** training embeddings that remain stable under realistic acquisition artifacts;
 - **calibration-aware model selection:** choosing models by reliability metrics rather than accuracy alone.
