@@ -17,7 +17,7 @@ This project investigates reliability-aware machine learning for noisy physiolog
 
 ## Visual Overview
 
-![Reliability-aware workflow](doc/assets/reliability_workflow_diagram.png.png)
+![Reliability-aware workflow](doc/assets/reliability_workflow_diagram.png)
 
 The workflow follows the core research logic: signal input, leakage-safe preprocessing, model prediction, reliability analysis, calibration evaluation, robustness testing, and decision-support reporting.
 
