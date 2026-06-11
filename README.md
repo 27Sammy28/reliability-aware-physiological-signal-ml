@@ -34,6 +34,23 @@ This makes the repository more than an ECG classifier. It is a reusable framewor
 - **Reproducible research scaffold:** separates source code, configs, documentation, result artifacts, and responsible-AI notes.
 - **Future modality bridge:** positions ECG as a prototype for speech, voice, cough, respiratory, and language-based health AI.
 
+## Sharper Research Contribution
+
+The research contribution is not simply another ECG classifier. The project studies a **reliability-aware evaluation layer** for noisy biomedical signals: models are compared by clean discrimination, probability calibration, perturbation robustness, and error-pattern behavior under degraded signal quality.
+
+In future extensions, this can become a full method by adding:
+
+- **reliability-weighted fusion:** down-weighting noisy or missing modalities before prediction;
+- **uncertainty-guided masking:** identifying signal regions or modalities that should contribute less under corruption;
+- **noise-aware representation learning:** training embeddings that remain stable under realistic acquisition artifacts;
+- **calibration-aware model selection:** choosing models by reliability metrics rather than accuracy alone.
+
+## Architecture Overview
+
+![Reliability-aware architecture](doc/assets/architecture_diagram.png)
+
+The pipeline separates signal preprocessing, model prediction, reliability estimation, perturbation stress testing, and final reporting. This structure makes the repository compatible with future multimodal health-signal experiments such as ECG--PPG fusion, speech/audio biomarkers, or wearable sensor streams.
+
 ## Current Results Snapshot
 
 The implemented binary MIT-BIH experiment treats label `0` as normal and labels `1--4` as arrhythmia-positive. Models were trained on a stratified 12,000-row subset of the training split and evaluated on the full test split.
@@ -60,6 +77,12 @@ The implemented binary MIT-BIH experiment treats label `0` as normal and labels 
 1. **Accuracy is incomplete:** models with useful AUROC can still have weak threshold behavior or calibration problems.
 2. **Calibration changes the story:** reliability diagrams and ECE reveal whether predicted probabilities are trustworthy.
 3. **Noise stress testing is necessary:** robustness curves show how performance and confidence degrade under corrupted signals.
+
+## Baselines and Failure Analysis
+
+The current implementation reports dependency-light baselines that run in a constrained environment: logistic regression, linear SVM, decision tree, random forest, and gradient-boosted trees. A stronger research benchmark should next add CNN, LSTM/GRU, temporal Transformer, and simple multimodal-fusion baselines when the required deep-learning stack is available.
+
+Failure analysis is central to the project. The confusion matrix shows where threshold decisions fail, while reliability and robustness curves show whether confidence remains meaningful as corruption increases. This is the key trustworthy-AI framing: the repository asks **when the model fails, how confidence changes, and whether those failures are visible before deployment**.
 
 ## Figure Gallery
 
